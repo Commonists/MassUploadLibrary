@@ -130,3 +130,26 @@ class MetadataCollection(object):
         """
         print self.records[index].get_title()
         print self.records[index].to_template()
+
+    def index_unique_metadata_values(self):
+        """Count unique metadata values.
+
+        Loop over the metadata collection.
+        Return a dictionary of Sets (?)
+
+        """
+
+        def _add_to_set_dict(aDict, key, value):
+            if key not in aDict:
+                aDict[key] = set()
+            try:
+                aDict[key].add(value)
+            except TypeError, e:
+                aDict[key].update(value)
+
+        sets_dict = dict()
+        for record in self.records:
+            for field, field_value in record.__dict__.items():
+                add_to_set_dict(sets_dict, field, field_value)
+        return sets_dict
+
