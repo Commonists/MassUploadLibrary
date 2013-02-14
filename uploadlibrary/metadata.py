@@ -29,6 +29,10 @@ class MetadataRecord(object):
         """
         self.__dict__.update(entries)
 
+    def get_field_names(self):
+        """Return the field values from the records."""
+        return self.__dict__.keys()
+
     def post_process(self, mapping):
         """Post-process the MetadataRecord with the given mapping.
 
