@@ -11,6 +11,7 @@ import codecs
 import csv
 from os.path import join
 import os
+from collections import Counter
 sys.path.append('../pywikipedia')
 import wikipedia as pywikibot
 import pywikibot.textlib as textlib
@@ -153,3 +154,26 @@ class MetadataCollection(object):
                 add_to_set_dict(sets_dict, field, field_value)
         return sets_dict
 
+    def count_metadata_values(self):
+        """Count the metadata values for earch record field.
+
+        Return a dictionary of Counters.
+
+        """
+
+        def _add_to_counter_dict(aCounter_dict, field, value):
+            """Add to a dictionary of Counter the value for good Counter."""
+            if field not in aCounter_dict:
+                aCounter_dict[field] = Counter()
+            try:
+                aCounter_dict[field][value] += 1
+            except TypeError, e:
+                for item in value:
+                    aCounter_dict[field][item] += 1
+
+        field_values_counters_dict = {}
+        for record in self.records:
+            for field, field_value in record.__dict__.items():
+                _add_to_counter_dict(field_values_counters_dict,
+                                     field, field_value)
+        return field_values_counters_dict
