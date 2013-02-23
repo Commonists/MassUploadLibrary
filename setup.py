@@ -9,4 +9,6 @@ setup(name='MassUploadLibrary',
     author_email = 'JeanFred@github',
     license      = 'GPL',
     packages     = ['uploadlibrary'],
+    install_requires = ['Pywikipediabot'],
+    dependency_links = ['http://pywikipedia.org/nightly/package/pywikipedia-rewrite/pywikipedia-rewrite-nightly.tgz#egg=Pywikipediabot'],
     )
