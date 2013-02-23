@@ -12,9 +12,7 @@ import csv
 from os.path import join
 import os
 from collections import Counter
-sys.path.append('../pywikipedia')
-import wikipedia as pywikibot
-import pywikibot.textlib as textlib
+import pywikibot
 import UnicodeCSV
 
 
