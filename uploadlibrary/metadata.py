@@ -13,6 +13,7 @@ from os.path import join
 import os
 from collections import Counter
 import pywikibot
+from pywikibot import textlib
 import UnicodeCSV
 
 
