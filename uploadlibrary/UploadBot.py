@@ -37,6 +37,19 @@ class DataIngestionBot(DataIngestionBot):
 
         return title
 
+    def _debug_description(self, photo):
+        title = cleanUpTitle(photo.getTitle(self.titlefmt))
+        description = textlib.glue_template_and_params((self.pagefmt,
+                                                        photo.metadata))
+        print "= %s =" % title
+        print "{{collapse|title=%s|1=<pre>\n%s\n</pre>}}" % (title,
+                                                             description)
+        print description
+
+    def dry_run(self):
+        for photo in self.reader:
+            self._debug_description(photo)
+
 
 def cleanUpTitle(title):
     """Clean up the title of a potential mediawiki page.
