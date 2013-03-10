@@ -94,6 +94,8 @@ class MetadataCollection(object):
     def __init__(self):
         """Constructor."""
         self.records = []
+        self.fields = set()
+        self.post_processor = MetadataMapping()
 
     def retrieve_metadata_from_csv(self, csv_file, delimiter=','):
         """Retrieve metadata from the given CSV file."""
@@ -184,3 +186,67 @@ class MetadataCollection(object):
                 _add_to_counter_dict(field_values_counters_dict,
                                      field, field_value)
         return field_values_counters_dict
+
+    @staticmethod
+    def write_dict_as_wiki(aDict, name, directory, template):
+        """Write a given dictionary on disk, in template alignment format."""
+        filename = os.path.join(directory, name.replace("/", ""))
+        with codecs.open(filename, 'w', 'utf-8') as wikipage:
+            wikipage.write("""\
+{| class='wikitable' border='1'
+|-
+! Item
+! Count
+! Tag
+! Categories
+""")
+            items = aDict.items()
+            items.sort(key=lambda x: x[1], reverse=True)
+            for item in items:
+                try:
+                    values = (template,
+                            {'item': item[0], 'count': item[1],
+                            'value': "", 'categories': ""})
+                    table_line = ('\n' +
+                                  textlib.glue_template_and_params(values))
+                    wikipage.write(unicode(table_line))
+                except:
+                    pass
+            wikipage.write("\n|}")
+
+    def _retrieve_from_wiki(self, filename, alignment_template):
+        """Retrieve the metadata mapping from a given wikipage on disk.
+
+        Iterate over the given alignment template occurences,
+        retrieve and return the mapping values.
+
+        """
+
+        print "retrieve_from_wiki " + filename
+        wiki_file = os.path.join('wiki', filename.replace("/", ""))
+        try:
+            with codecs.open(wiki_file, mode='r', encoding='utf-8') as f:
+                all_templates = textlib.extract_templates_and_params(f.read())
+                field_mapper = dict()
+                for x in all_templates:
+                    if x[0] == alignment_template:
+                        categories = x[1]['categories'].split(']]')[0].split(':')[-1]
+                        field_mapper[x[1]['item']] = (x[1]['value'], categories)
+                return field_mapper
+        except Exception, e:
+            print e
+
+    def retrieve_metadata_alignments(self, fields, alignment_template):
+        """Retrieve metadata alignments from disk for all given fields.
+
+        Iterates over the given fields, determines the associate wikipage
+        and calls retrieve_alignment_from_wiki on each.
+
+        """
+        print 'retrieve_metadata_alignments'
+        alignments = dict()
+        for field in self.fields:
+            wikipage = field
+            alignments[field] = self._retrieve_from_wiki(wikipage,
+                                                         alignment_template)
+        self.post_processor = MetadataMapping(mapper=alignments)
