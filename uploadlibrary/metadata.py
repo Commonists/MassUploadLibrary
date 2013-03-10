@@ -4,12 +4,7 @@
 
 __authors__ = 'User:Jean-Frédéric'
 import sys
-
-sys.path.append('/home/jfk/Tuile/pywikipedia-rewrite')
-sys.path.append('/home/jfk/Tuile/pywikipedia-rewrite/scripts')
-
 import re
-import sys
 import pickle
 import codecs
 import csv
