@@ -3,6 +3,10 @@
 """Mass Upload Libray − handling metadata."""
 
 __authors__ = 'User:Jean-Frédéric'
+import sys
+
+sys.path.append('/home/jfk/Tuile/pywikipedia-rewrite')
+sys.path.append('/home/jfk/Tuile/pywikipedia-rewrite/scripts')
 
 import re
 import sys
@@ -12,26 +16,21 @@ import csv
 from os.path import join
 import os
 from collections import Counter
-import pywikibot
-from pywikibot import textlib
 import UnicodeCSV
+import pywikibot
+import pywikibot.textlib as textlib
+import data_ingestion
+from data_ingestion import Photo
+from PostProcessing import MetadataMapping
 
 
-class MetadataRecord(object):
+class MetadataRecord(Photo):
 
     """Represent a Record, with its associated metadata."""
 
-    def __init__(self, **entries):
-        """Constructor.
-
-        Update the object with dictionary passed as argument.
-
-        """
-        self.__dict__.update(entries)
-
     def get_field_names(self):
         """Return the field values from the records."""
-        return self.__dict__.keys()
+        return self.metadata.keys()
 
     def post_process(self, mapping):
         """Post-process the MetadataRecord with the given mapping.
@@ -40,7 +39,7 @@ class MetadataRecord(object):
         call the relevant post-processing method.
 
         """
-        for field in self.__dict__.keys():
+        for field in self.metadata.keys():
             if field in mapping.keys():
                 self.post_process_wrapper(field, mapping[field])
 
@@ -61,9 +60,6 @@ class MetadataRecord(object):
         return textlib.glue_template_and_params((template,
                                                  self.__dict__))
 
-    def get_title(self):
-        """Return the title for the file."""
-        raise NotImplementedError("This should be handled in subclasses.")
 
     def to_disk(self, directory):
         """Write the Record on disk in a given repository.
@@ -115,12 +111,13 @@ class MetadataCollection(object):
         initialised with the items as record values.
 
         """
-        return MetadataRecord(**items)
+        return MetadataRecord(None, items)
 
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
         for record in self.records:
             record.post_process(method_mapping)
+            yield record
 
     def print_metadata_of_record(self, index):
         """Print the metadata of the record.
@@ -149,8 +146,8 @@ class MetadataCollection(object):
 
         sets_dict = dict()
         for record in self.records:
-            for field, field_value in record.__dict__.items():
-                add_to_set_dict(sets_dict, field, field_value)
+            for field, field_value in record.metadata.items():
+                _add_to_set_dict(sets_dict, field, field_value)
         return sets_dict
 
     def count_metadata_values(self):
@@ -172,7 +169,7 @@ class MetadataCollection(object):
 
         field_values_counters_dict = {}
         for record in self.records:
-            for field, field_value in record.__dict__.items():
+            for field, field_value in record.metadata.items():
                 _add_to_counter_dict(field_values_counters_dict,
                                      field, field_value)
         return field_values_counters_dict
