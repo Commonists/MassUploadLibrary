@@ -51,15 +51,26 @@ class MetadataRecord(Photo):
         Update the record with it
 
         """
-        old_field_value = self.__dict__.pop(field, None)
+
+        def _smart_update_dict(aDict, other_dict):
+            for key, value in other_dict.items():
+                if key in aDict:
+                    new = []
+                    try:
+                        aDict[key].extend(value)
+                    except:
+                        aDict[key] = value.append(aDict[key])
+                else:
+                    aDict[key] = value
+
+        old_field_value = self.metadata.pop(field, None)
         new_field_value = method(field, old_field_value)
-        self.__dict__.update(**new_field_value)
+        _smart_update_dict(self.metadata, new_field_value)
 
     def to_template(self, template=u'Ingestion layout'):
         """Return the Record as a MediaWiki template."""
         return textlib.glue_template_and_params((template,
                                                  self.__dict__))
-
 
     def to_disk(self, directory):
         """Write the Record on disk in a given repository.
