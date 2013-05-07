@@ -1,11 +1,8 @@
-
-import sys
 import re
 import pywikibot
 import pywikibot.textlib as textlib
-import upload
-import data_ingestion
-from data_ingestion import Photo, DataIngestionBot
+from scripts.upload import UploadRobot
+from scripts.data_ingestion import DataIngestionBot
 
 
 class DataIngestionBot(DataIngestionBot):

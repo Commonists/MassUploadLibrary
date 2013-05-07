@@ -4,19 +4,16 @@
 
 __authors__ = 'User:Jean-Frédéric'
 import sys
-import re
 import pickle
 import codecs
 import csv
-from os.path import join
 import os
+from os.path import join
 from collections import Counter
-import UnicodeCSV
-import pywikibot
+from uploadlibrary import UnicodeCSV
 import pywikibot.textlib as textlib
-import data_ingestion
-from data_ingestion import Photo
-from PostProcessing import MetadataMapping
+from scripts.data_ingestion import Photo
+from uploadlibrary.PostProcessing import MetadataMapping
 
 
 class MetadataRecord(Photo):
