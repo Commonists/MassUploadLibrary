@@ -96,7 +96,9 @@ class MetadataCollection(object):
                                                       delimiter=delimiter)
         try:
             for row in csvReader:
-                self.records.append(self.handle_record(row))
+                metadata_record = self.handle_record(row)
+                self.records.append(metadata_record)
+                self.fields.update(metadata_record.get_field_names())
         except csv.Error, e:
             sys.exit('file %s, line %d: %s' % (self.csv_file,
                                                csvReader.line_num, e))
@@ -107,7 +109,9 @@ class MetadataCollection(object):
         assert os.path.exists(files_path)
         files = os.listdir(files_path)
         for image in files:
-            self.records.append(self.handle_record(join(files_path, image)))
+            metadata_record = self.handle_record(join(files_path, image))
+            self.records.append(metadata_record)
+            self.fields.update(metadata_record.get_field_names())
 
     def handle_record(self, items):
         """Handle a record.
