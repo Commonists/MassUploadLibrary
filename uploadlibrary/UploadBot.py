@@ -3,6 +3,20 @@ import pywikibot
 import pywikibot.textlib as textlib
 from scripts.upload import UploadRobot
 from scripts.data_ingestion import DataIngestionBot
+from argparse import ArgumentParser
+
+def UploadBotArgumentParser():
+    """Create an ArgumentParser object."""
+    parser = ArgumentParser(description="Process metadata and upload to Commons")
+    parser.add_argument('--prepare-alignment', action="store_true",
+                        help='Prepare the alignment.')
+    parser.add_argument('--post-process', action="store_true",
+                        help='Post-process the files - necessary for upload.')
+    parser.add_argument('--dry-run', action="store_true",
+                        help='Do not do the upload, just debug.')
+    parser.add_argument('--upload', action="store_true",
+                        help='Upload the file to Wikimedia Commons.')
+    return parser
 
 
 class DataIngestionBot(DataIngestionBot):
