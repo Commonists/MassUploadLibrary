@@ -18,7 +18,6 @@ Features include:
 * Use of a 
   [Data ingestion template](https://commons.wikimedia.org/wiki/Category:Data_ingestion_layout_templates)
 
-
 Dependencies
 ------------
 
@@ -28,7 +27,7 @@ Actual upload is made using
 and data_ingestion.py.
 
 This script actually uses
-[pywikipedia-rewrite](http://pywikipedia.org/)
+[pywikipedia-rewrite](http://pywikipedia.org/nightly/)
 
 
 Installation
@@ -36,4 +35,5 @@ Installation
 `python setup.py install`
 
 Will install the library and its dependencies
+
 (note that the Pywikipedia page may be down).

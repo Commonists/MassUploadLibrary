@@ -84,7 +84,6 @@ def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
     and the fixed rear.
 
     """
-    print entries
     fixed_front = fixed_front_fmt % entries
     fixed_rear = fixed_rear_fmt % entries
     variable = variable_fmt % entries

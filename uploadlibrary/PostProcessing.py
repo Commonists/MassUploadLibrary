@@ -6,8 +6,6 @@ __authors__ = 'User:Jean-Frédéric'
 
 import re
 
-"""Post processing Record values."""
-
 
 def join_all(field, old_field_value, separator=" ; "):
     """Join the values together.
@@ -51,11 +49,12 @@ class MetadataMapping():
             return
         else:
             new_value = dict()
-            (value, categories) = self.mapper[field].get(content, ("", []))
+            (value, categories) = self.mapper[field].get(old_field_value,
+                                                         ("", []))
             if value:
                 new_value[field] = value
             else:
                 new_value[field] = old_field_value
             if categories:
-                new_value[categories] = categories
+                new_value['categories'] = categories
             return new_value

@@ -47,7 +47,6 @@ class MetadataRecord(Photo):
         def _smart_update_dict(aDict, other_dict):
             for key, value in other_dict.items():
                 if key in aDict:
-                    new = []
                     try:
                         aDict[key].extend(value)
                     except:
@@ -64,19 +63,19 @@ class MetadataRecord(Photo):
         return textlib.glue_template_and_params((template,
                                                  self.__dict__))
 
-    def to_disk(self, directory):
-        """Write the Record on disk in a given repository.
+    #def to_disk(self, directory):
+        #"""Write the Record on disk in a given repository.
 
-        Serialise the record and name it as the file title,
-        do nothing if anything goes wrong.
+        #Serialise the record and name it as the file title,
+        #do nothing if anything goes wrong.
 
-        """
-        fileName = join(directory, self.get_title() + '.dump')
-        try:
-            with open(fileName, 'w') as f:
-                pickle.dump(self, f)
-        except Exception, e:
-            print "Could not pickle record %s \n %s" % (fileName, e)
+        #"""
+        #fileName = join(directory, self.get_title() + '.dump')
+        #try:
+            #with open(fileName, 'w') as f:
+                #pickle.dump(self, f)
+        #except Exception, e:
+            #print "Could not pickle record %s \n %s" % (fileName, e)
 
 
 class MetadataCollection(object):
@@ -100,7 +99,7 @@ class MetadataCollection(object):
                 self.records.append(metadata_record)
                 self.fields.update(metadata_record.get_field_names())
         except csv.Error, e:
-            sys.exit('file %s, line %d: %s' % (self.csv_file,
+            sys.exit('file %s, line %d: %s' % (csv_file,
                                                csvReader.line_num, e))
 
     def retrieve_metadata_from_files(self, files_path):
@@ -232,17 +231,26 @@ class MetadataCollection(object):
         except Exception, e:
             print e
 
-    def retrieve_metadata_alignments(self, fields, alignment_template):
+    def retrieve_metadata_alignments(self, fields=None,
+                                     alignment_template=None):
         """Retrieve metadata alignments from disk for all given fields.
 
         Iterates over the given fields, determines the associate wikipage
         and calls retrieve_alignment_from_wiki on each.
 
         """
-        print 'retrieve_metadata_alignments'
+        if fields is None:
+            fields = self.fields
         alignments = dict()
-        for field in self.fields:
+        for field in fields:
             wikipage = field
             alignments[field] = self._retrieve_from_wiki(wikipage,
                                                          alignment_template)
         self.post_processor = MetadataMapping(mapper=alignments)
+
+    def write_metadata_to_csv(self, file_object):
+        """Write the metadata collection as a CSV file."""
+        writer = csv.DictWriter(file_object, self.fields)
+        writer.writeheader()
+        for record in self.records:
+            writer.writerow(record.metadata)

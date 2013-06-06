@@ -36,3 +36,4 @@ nosetests.xml
 
 #Mr Developer
 .mr.developer.cfg
+*.kate-swp
