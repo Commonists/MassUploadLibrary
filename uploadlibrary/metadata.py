@@ -24,7 +24,7 @@ class MetadataRecord(Photo):
         """Return the field values from the records."""
         return self.metadata.keys()
 
-    def post_process(self, mapping):
+    def post_process(self, mapping, post_processor):
         """Post-process the MetadataRecord with the given mapping.
 
         For each field of the record,
@@ -33,13 +33,14 @@ class MetadataRecord(Photo):
         """
         for field in self.metadata.keys():
             if field in mapping.keys():
-                self.post_process_wrapper(field, mapping[field])
+                self.post_process_wrapper(post_processor, 
+                                          field, mapping[field])
 
-    def post_process_wrapper(self, field, method):
+    def post_process_wrapper(self, post_processor, field, method_info):
         """Wrap the post-processing methods.
 
         Pop the value for the given field from the record
-        Apply the given method on it
+        Apply the given post_processor method on it
         Update the record with it
 
         """
@@ -249,7 +250,8 @@ class MetadataCollection(object):
             wikipage = field
             alignments[field] = self._retrieve_from_wiki(wikipage,
                                                          alignment_template)
-        self.post_processor = MetadataMapping(mapper=alignments)
+        mapper = MetadataMapping(mapper=alignments)
+        self.post_processor = mapper
 
     def write_metadata_to_csv(self, file_object):
         """Write the metadata collection as a CSV file."""
