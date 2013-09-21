@@ -40,8 +40,8 @@ class DataIngestionBot(DataIngestionBot):
             pywikibot.output(u"Skipping duplicate of %r" % (duplicates, ))
             return duplicates[0]
 
-        title = make_title(photo, self.front_titlefmt, self.rear_titlefmt,
-                           self.variable_titlefmt)
+        title = make_title(photo.metadata, self.front_titlefmt,
+                           self.rear_titlefmt, self.variable_titlefmt)
 
         description = textlib.glue_template_and_params((self.pagefmt,
                                                         photo.metadata))
