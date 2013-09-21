@@ -36,6 +36,11 @@ def process_DIMS(field, old_field_value):
     return DIMS_BIS
 
 
+def make_categories(categories):
+    """Build the wikitext for a given list of category names."""
+    return "\n".join(["[[Category:%s]]" % x for x in categories])
+
+
 class MetadataMapping():
 
     """Mapping metadata using aligment."""

@@ -13,7 +13,7 @@ from collections import Counter
 from uploadlibrary import UnicodeCSV
 import pywikibot.textlib as textlib
 from scripts.data_ingestion import Photo
-from uploadlibrary.PostProcessing import MetadataMapping
+from uploadlibrary.PostProcessing import MetadataMapping, make_categories
 
 
 class MetadataRecord(Photo):
@@ -124,7 +124,10 @@ class MetadataCollection(object):
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
         for record in self.records:
-            record.post_process(method_mapping)
+            record.metadata['categories'] = set()
+            record.post_process(method_mapping, self.post_processor)
+            categories = record.metadata.get('categories', None)
+            record.metadata['categories'] = make_categories(categories)
             yield record
 
     def print_metadata_of_record(self, index):
