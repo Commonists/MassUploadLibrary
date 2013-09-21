@@ -56,7 +56,14 @@ class MetadataRecord(Photo):
                     aDict[key] = value
 
         old_field_value = self.metadata.pop(field, None)
-        new_field_value = method(field, old_field_value)
+        try:
+            method = getattr(post_processor, method_info)
+        except TypeError:
+            (method, kwargs) = method_info
+        new_field_value = method(field, old_field_value, **kwargs)
+        categories = new_field_value.pop('categories', None)
+        if categories:
+            self.metadata['categories'].add(categories)
         _smart_update_dict(self.metadata, new_field_value)
 
     def to_template(self, template=u'Ingestion layout'):
