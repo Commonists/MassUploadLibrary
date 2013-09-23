@@ -22,18 +22,12 @@ Dependencies
 ------------
 
 Actual upload is made using
-[Pywikipedia](http://www.mediawiki.org/wiki/Manual:Pywikipediabot), its
-[upload.py](http://www.mediawiki.org/wiki/Manual:Pywikipediabot/upload.py)
+[Pywikibot](http://www.mediawiki.org/wiki/Manual:Pywikibot) (in its core version),
+its [upload.py](http://www.mediawiki.org/wiki/Manual:Pywikibot/upload.py)
 and data_ingestion.py.
-
-This script actually uses
-[pywikipedia-rewrite](http://pywikipedia.org/nightly/)
-
 
 Installation
 ------------
 `python setup.py install`
 
-Will install the library and its dependencies
-
-(note that the Pywikipedia page may be down).
+Will install the library and its dependencies.
