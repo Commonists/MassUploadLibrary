@@ -10,5 +10,5 @@ setup(name='MassUploadLibrary',
     license      = 'GPL',
     packages     = ['uploadlibrary'],
     install_requires = ['Pywikipediabot'],
-    dependency_links = ['http://pywikipedia.org/nightly/package/pywikipedia-rewrite/pywikipedia-rewrite-nightly.tgz#egg=Pywikipediabot'],
+    dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikipediabot'],
     )
