@@ -13,7 +13,7 @@ from collections import Counter
 from uploadlibrary import UnicodeCSV
 import pywikibot.textlib as textlib
 from scripts.data_ingestion import Photo
-from uploadlibrary.PostProcessing import MetadataMapping, make_categories
+from uploadlibrary.PostProcessing import make_categories
 
 
 class MetadataRecord(Photo):
@@ -24,23 +24,22 @@ class MetadataRecord(Photo):
         """Return the field values from the records."""
         return self.metadata.keys()
 
-    def post_process(self, mapping, post_processor):
-        """Post-process the MetadataRecord with the given mapping.
+    def post_process(self, method_mapping):
+        """Post-process the MetadataRecord with a method in the given mapping.
 
         For each field of the record,
         call the relevant post-processing method.
 
         """
         for field in self.metadata.keys():
-            if field in mapping.keys():
-                self.post_process_wrapper(post_processor, 
-                                          field, mapping[field])
+            if field in method_mapping.keys():
+                self.post_process_wrapper(field, method_mapping[field])
 
-    def post_process_wrapper(self, post_processor, field, method_info):
+    def post_process_wrapper(self, field, method_info):
         """Wrap the post-processing methods.
 
         Pop the value for the given field from the record
-        Apply the given post_processor method on it
+        Apply the given method on it
         Update the record with it
 
         """
@@ -56,10 +55,7 @@ class MetadataRecord(Photo):
                     aDict[key] = value
 
         old_field_value = self.metadata.pop(field, None)
-        try:
-            method = getattr(post_processor, method_info)
-        except TypeError:
-            (method, kwargs) = method_info
+        (method, kwargs) = method_info
         new_field_value = method(field, old_field_value, **kwargs)
         categories = new_field_value.pop('categories', None)
         if categories:
@@ -94,10 +90,10 @@ class MetadataCollection(object):
         """Constructor."""
         self.records = []
         self.fields = set()
-        self.post_processor = MetadataMapping()
 
     def retrieve_metadata_from_csv(self, csv_file, delimiter=','):
         """Retrieve metadata from the given CSV file."""
+        print "retrieve_metadata_from_csv"
         file_handler = codecs.open(csv_file, 'r', 'utf-8')
         csvReader = UnicodeCSV.unicode_csv_dictreader(file_handler,
                                                       delimiter=delimiter)
@@ -131,12 +127,15 @@ class MetadataCollection(object):
 
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
+        print "post_process_collection"
+        mylist = []
         for record in self.records:
             record.metadata['categories'] = set()
-            record.post_process(method_mapping, self.post_processor)
+            record.post_process(method_mapping)
             categories = record.metadata.get('categories', None)
             record.metadata['categories'] = make_categories(categories)
-            yield record
+            mylist.append(record)
+        return mylist
 
     def print_metadata_of_record(self, index):
         """Print the metadata of the record.
@@ -220,45 +219,6 @@ class MetadataCollection(object):
                     pass
             wikipage.write("\n|}")
 
-    def _retrieve_from_wiki(self, filename, alignment_template):
-        """Retrieve the metadata mapping from a given wikipage on disk.
-
-        Iterate over the given alignment template occurences,
-        retrieve and return the mapping values.
-
-        """
-
-        print "retrieve_from_wiki " + filename
-        wiki_file = os.path.join('wiki', filename.replace("/", ""))
-        try:
-            with codecs.open(wiki_file, mode='r', encoding='utf-8') as f:
-                all_templates = textlib.extract_templates_and_params(f.read())
-                field_mapper = dict()
-                for x in all_templates:
-                    if x[0] == alignment_template:
-                        categories = x[1]['categories'].split(']]')[0].split(':')[-1]
-                        field_mapper[x[1]['item']] = (x[1]['value'], categories)
-                return field_mapper
-        except Exception, e:
-            print e
-
-    def retrieve_metadata_alignments(self, fields=None,
-                                     alignment_template=None):
-        """Retrieve metadata alignments from disk for all given fields.
-
-        Iterates over the given fields, determines the associate wikipage
-        and calls retrieve_alignment_from_wiki on each.
-
-        """
-        if fields is None:
-            fields = self.fields
-        alignments = dict()
-        for field in fields:
-            wikipage = field
-            alignments[field] = self._retrieve_from_wiki(wikipage,
-                                                         alignment_template)
-        mapper = MetadataMapping(mapper=alignments)
-        self.post_processor = mapper
 
     def write_metadata_to_csv(self, file_object):
         """Write the metadata collection as a CSV file."""

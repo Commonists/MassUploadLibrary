@@ -5,7 +5,9 @@
 __authors__ = 'User:Jean-Frédéric'
 
 import re
-
+import os
+import codecs
+import pywikibot.textlib as textlib
 
 def join_all(field, old_field_value, separator=" ; "):
     """Join the values together.
@@ -26,7 +28,6 @@ def process_DIMS(field, old_field_value):
 
     """
     DIMS = old_field_value
-    print DIMS
     pattern = '(\w+?)[\.:]\s?([\d,]*)\s?(\w*)\s?;?\s?'
     splitted = filter(lambda a: a != u'', re.split(pattern, DIMS))
     DIMS_BIS = dict(zip(["_".join([field, x]) for x in splitted[0::3]],
@@ -41,25 +42,51 @@ def make_categories(categories):
     return "\n".join(["[[Category:%s]]" % x for x in categories])
 
 
-class MetadataMapping():
+def process_with_alignment(field, old_field_value, mapper=None):
+    """Retrieve the alignment for a given record contents."""
+    new_value = dict()
+    (value, categories) = mapper[field].get(old_field_value, ("", []))
+    if value:
+        new_value[field] = value
+    else:
+        new_value[field] = old_field_value
+    if categories:
+        new_value['categories'] = categories
+    return new_value
 
-    """Mapping metadata using aligment."""
 
-    def __init__(self, mapper=None):
-        self.mapper = mapper
+def _retrieve_from_wiki(filename, alignment_template):
+    """Retrieve a metadata mapping from a given wikipage on disk.
 
-    def process_with_alignment(self, field, old_field_value):
-        """Retrieve the alignment for a given record contents."""
-        if self.mapper is None:
-            return
-        else:
-            new_value = dict()
-            (value, categories) = self.mapper[field].get(old_field_value,
-                                                         ("", []))
-            if value:
-                new_value[field] = value
-            else:
-                new_value[field] = old_field_value
-            if categories:
-                new_value['categories'] = categories
-            return new_value
+    Iterate over the given alignment template occurences,
+    retrieve and return the mapping values.
+
+    """
+
+    wiki_file = os.path.join('wiki', filename.replace("/", ""))
+    try:
+        with codecs.open(wiki_file, mode='r', encoding='utf-8') as f:
+            all_templates = textlib.extract_templates_and_params(f.read())
+            field_mapper = dict()
+            for x in all_templates:
+                if x[0] == alignment_template:
+                    categories = x[1]['categories'].split(']]')[0].split(':')[-1]
+                    field_mapper[x[1]['item']] = (x[1]['value'], categories)
+            return field_mapper
+    except Exception, e:
+        print e
+
+
+def retrieve_metadata_alignments(fields, alignment_template):
+    """Retrieve metadata alignments from disk for all given fields.
+
+    Iterates over the given fields, determines the associate wikipage
+    and calls retrieve_alignment_from_wiki on each.
+
+    """
+
+    alignments = dict()
+    for field in fields:
+        wikipage = field
+        alignments[field] = _retrieve_from_wiki(wikipage, alignment_template)
+    return alignments
