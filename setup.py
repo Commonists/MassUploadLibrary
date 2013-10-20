@@ -9,6 +9,6 @@ setup(name='MassUploadLibrary',
     author_email = 'JeanFred@github',
     license      = 'MIT',
     packages     = ['uploadlibrary'],
-    install_requires = ['Pywikipediabot'],
-    dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikipediabot'],
+    install_requires = ['Pywikibot'],
+    dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikibot'],
     )
