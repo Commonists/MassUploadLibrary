@@ -131,14 +131,17 @@ class MetadataCollection(object):
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
         print "post_process_collection"
-        mylist = []
+        categories_counter = Counter()
+        categories_count_per_file = Counter()
         for record in self.records:
             record.metadata['categories'] = set()
             record.post_process(method_mapping)
             categories = record.metadata.get('categories', None)
+            categories_counter.update(categories)
+            categories_count_per_file[record.URL] = len(categories)
             record.metadata['categories'] = make_categories(categories)
-            mylist.append(record)
-        return mylist
+
+        return categories_counter, categories_count_per_file
 
     def print_metadata_of_record(self, index):
         """Print the metadata of the record.
@@ -229,3 +232,34 @@ class MetadataCollection(object):
         writer.writeheader()
         for record in self.records:
             writer.writerow(record.metadata)
+
+
+def categorisation_statistics(all_categories, categories_count_per_file):
+    """Computes statistics on the categorisation."""
+    numpy_available = True
+    try:
+        import numpy
+    except ImportError:
+        numpy_available = False
+
+    print "= Categoriation statistics ="
+    print "== Per category =="
+    print "%s categories, %s distincts" % (sum(all_categories.values()),
+                                           len(all_categories))
+    print "Max %s // Min %s" % (max(all_categories.values()),
+                                min(all_categories.values()))
+    if numpy_available:
+        print "Mean: %s" % numpy.mean(all_categories.values())
+        print "Median: %s" % numpy.median(all_categories.values())
+    print "Top 10:"
+    print all_categories.most_common(10)
+    print "Lose 10:"
+    print all_categories.most_common()[-10:]
+
+    print "== Per file =="
+    print "Max %s // Min %s" % (max(categories_count_per_file.values()),
+                                min(categories_count_per_file.values()))
+    print "%s uncategorized files" % len([x for x in categories_count_per_file if categories_count_per_file[x] is 0])
+    if numpy_available:
+        print "Mean: %s" % numpy.mean(categories_count_per_file.values())
+        print "Median: %s" % numpy.median(categories_count_per_file.values())
