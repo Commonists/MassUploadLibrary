@@ -59,7 +59,10 @@ class MetadataRecord(Photo):
         new_field_value = method(field, old_field_value, **kwargs)
         categories = new_field_value.pop('categories', None)
         if categories:
-            self.metadata['categories'].add(categories)
+            try:
+                self.metadata['categories'].add(categories)
+            except:
+                self.metadata['categories'].update(categories)
         _smart_update_dict(self.metadata, new_field_value)
 
     def to_template(self, template=u'Ingestion layout'):
