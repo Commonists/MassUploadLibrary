@@ -1,6 +1,6 @@
 # -*- coding: latin-1 -*-
 
-"""Mass Upload Libray − processing metadata values."""
+"""Mass Upload Libray - processing metadata values."""
 
 __authors__ = 'User:Jean-Frédéric'
 
@@ -8,6 +8,7 @@ import re
 import os
 import codecs
 import pywikibot.textlib as textlib
+
 
 def join_all(field, old_field_value, separator=" ; "):
     """Join the values together.
@@ -17,6 +18,32 @@ def join_all(field, old_field_value, separator=" ; "):
 
     """
     return {field: separator.join(old_field_value)}
+
+
+def map_and_apply_technique(separator=","):
+    """Return a list of technique converted to use {{Technique}}."""
+    support_mapper = {
+        'papier': 'paper',
+        'parchemin': 'parchment',
+        'cire': 'wax',
+        'cuir': 'leather',
+        'plâtre': 'plaster',
+        'bois': 'wood',
+        'érable': 'maple',
+        'velin': 'Vellum'
+        }
+    return (split_and_apply_template_on_each, {'template': 'Technique',
+                                               'mapper': support_mapper,
+                                               'separator': separator
+                                               })
+
+
+def split_and_apply_template_on_each(field, old_field_value, template, mapper, separator=","):
+    """Split the old value against the given separator and apply the template on each part"""
+    bits = old_field_value.split(separator)
+    translated_bits = [mapper.get(x.strip(), x.strip()) for x in bits]
+    new_value = ', '.join(["{{%s|%s}}" % (template, x) for x in translated_bits])
+    return {field: new_value}
 
 
 def process_DIMS(field, old_field_value):
