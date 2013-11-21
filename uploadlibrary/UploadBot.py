@@ -25,12 +25,16 @@ class DataIngestionBot(DataIngestionBot):
 
     def __init__(self, reader, front_titlefmt, rear_titlefmt,
                  variable_titlefmt, pagefmt,
+                 subst=False,
                  site=pywikibot.getSite(u'commons', u'commons')):
         self.reader = reader
         self.front_titlefmt = front_titlefmt
         self.rear_titlefmt = rear_titlefmt
         self.variable_titlefmt = variable_titlefmt
         self.pagefmt = pagefmt
+        self.subst = subst
+        if subst:
+            self.pagefmt = 'subst:%s' % self.pagefmt
         self.site = site
         #super(self.__class__, self).__init__()
 
@@ -39,7 +43,8 @@ class DataIngestionBot(DataIngestionBot):
         if duplicates:
             pywikibot.output(u"Skipping duplicate of %r" % (duplicates, ))
             return duplicates[0]
-
+        if self.subst:
+            photo.metadata['subst'] = 'subst:'
         title = make_title(photo.metadata, self.front_titlefmt,
                            self.rear_titlefmt, self.variable_titlefmt)
 
@@ -66,6 +71,8 @@ class DataIngestionBot(DataIngestionBot):
         """Print the description for debugging."""
         title = make_title(photo.metadata, self.front_titlefmt,
                            self.rear_titlefmt, self.variable_titlefmt)
+        if self.subst:
+            photo.metadata['subst'] = 'subst:'
         description = textlib.glue_template_and_params((self.pagefmt,
                                                         photo.metadata))
         print "= %s =" % title
