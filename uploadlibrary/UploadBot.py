@@ -106,7 +106,7 @@ def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
 
     """
     fixed_front = fixed_front_fmt % entries
-    fixed_rear = fixed_rear_fmt % entries
+    fixed_rear = fixed_rear_fmt % entries + '.' + entries['_ext']
     variable = variable_fmt % entries
     return cleanUpTitle(_cut_title(fixed_front, variable, fixed_rear,
                                    MAX_LENGTH=255))
