@@ -96,7 +96,6 @@ class MetadataCollection(object):
 
     def retrieve_metadata_from_csv(self, csv_file, delimiter=','):
         """Retrieve metadata from the given CSV file."""
-        print "retrieve_metadata_from_csv"
         file_handler = codecs.open(csv_file, 'r', 'utf-8')
         csvReader = UnicodeCSV.unicode_csv_dictreader(file_handler,
                                                       delimiter=delimiter)
@@ -130,7 +129,6 @@ class MetadataCollection(object):
 
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
-        print "post_process_collection"
         categories_counter = Counter()
         categories_count_per_file = Counter()
         for record in self.records:
