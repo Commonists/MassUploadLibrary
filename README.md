@@ -119,6 +119,25 @@ Data ingestion templates can be made arbitrarily complex, with crazy `{{#if}}` p
 triggering categorisation or whatever. Some problems are more easily solved this
 way rather than implementing it in Python.
 
+
+### Basic categorisation statistics
+
+As we saw earlier, categories may be added as part of the post-processing
+(mainly through alignment). Every addition is tracked, both per category and per file.
+
+A method allows to compute basic measures on this:
+* Per category:
+  * Total number of categories added, and of distinct ones
+  * Most used, less used, mean and median
+* Per file:
+  * Most and less categorised files
+  * Number of uncategorised files
+  * Number and percentage of files with less than `N` categories
+  * Average and median categorisation
+
+(Note that some mean and median computations need `numpy`).
+
+
 Installation
 ------------
 
