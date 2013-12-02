@@ -141,9 +141,9 @@ A method allows to compute basic measures on this:
 Installation
 ------------
 
-Easiest way to install should be to use `pip`:
+Easiest way to install should be to use `pip` with `git`:
 
-    pip install git+git://github.com/JeanFred/MassUploadLibrary.git#egg=uploadlibrary
+    pip install git+git://github.com/Commmonists/MassUploadLibrary.git#egg=uploadlibrary
 
 But this usually fails when failing to solve the Pywikibot dependency.
 
