@@ -155,6 +155,11 @@ Alternatively, you can clone the repository and install it using `setuptools`:
 Note that Pywikibot dependency is sometimes tricky to resolve automatically.
 If it fails, consider installing it manually.
 
+
+License
+-------
+MIT license
+
 [1]: https://commons.wikimedia.org/wiki/Commons:Batch_uploading/Fonds_Eug%C3%A8ne_Trutat_bis/Places
 [2]: https://commons.wikimedia.org/wiki/Commons:Batch_uploading/Fonds_Eug%C3%A8ne_Trutat_bis/Auteur
 [peer review]: https://commons.wikimedia.org/wiki/Commons:Batch_uploading/Fonds_Eug%C3%A8ne_Trutat_bis/test
