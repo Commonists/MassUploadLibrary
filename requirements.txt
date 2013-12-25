@@ -1,1 +1,2 @@
+lxml
 git+https://gerrit.wikimedia.org/r/pywikibot/core.git

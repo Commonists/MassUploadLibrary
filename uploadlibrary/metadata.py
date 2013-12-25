@@ -8,8 +8,10 @@ import pickle
 import codecs
 import csv
 import os
+import re
 from os.path import join
 from collections import Counter
+from lxml import etree
 from uploadlibrary import UnicodeCSV
 import pywikibot.textlib as textlib
 from scripts.data_ingestion import Photo
@@ -69,6 +71,22 @@ class MetadataRecord(Photo):
         """Return the Record as a MediaWiki template."""
         return textlib.glue_template_and_params((template,
                                                  self.__dict__))
+
+    def to_xml(self):
+        """Return the Record as an XML Element."""
+        record_element = etree.Element('record')
+        params = self.metadata
+        for field, value in params.items():
+            field = re.sub(' ', '_', field)
+            field_element = etree.SubElement(record_element, unicode(field))
+            if isinstance(value, set):
+                name = field + '_element'
+                for item in value:
+                    sub_element = etree.SubElement(field_element, name)
+                    sub_element.text = item
+            else:
+                field_element.text = unicode(value)
+        return record_element
 
     def to_disk(self, title_format, directory):
         """Write the Record on disk in a given repository.
@@ -137,7 +155,7 @@ class MetadataCollection(object):
             categories = record.metadata.get('categories', None)
             categories_counter.update(categories)
             categories_count_per_file[record.URL] = len(categories)
-            record.metadata['categories'] = make_categories(categories)
+            #record.metadata['categories'] = make_categories(categories)
 
         return categories_counter, categories_count_per_file
 
@@ -230,6 +248,14 @@ class MetadataCollection(object):
         writer.writeheader()
         for record in self.records:
             writer.writerow(record.metadata)
+
+    def write_metadata_to_xml(self, file_object):
+        """Write the metadata collection as an XML file."""
+        records_element = etree.Element("records")
+        for record in self.records:
+            records_element.append(record.to_xml())
+        tree = etree.ElementTree(records_element)
+        tree.write(file_object, encoding='utf-8', pretty_print=True)
 
 
 def categorisation_statistics(all_categories, categories_count_per_file):

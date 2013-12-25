@@ -19,7 +19,7 @@ classifiers = [
     'Topic :: Utilities'
 ]
 packages = ['uploadlibrary']
-requires = ['argparse', 'Pywikibot']
+requires = ['argparse', 'lxml', 'Pywikibot']
 dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikibot']
 
 setup(name='MassUploadLibrary',
