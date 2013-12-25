@@ -1,14 +1,34 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: latin-1 -*-
 
-from setuptools import setup
+"""Setup script"""
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+version = 0.5
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Environment :: Console',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Topic :: Utilities'
+]
+packages = ['uploadlibrary']
+requires = ['argparse', 'Pywikibot']
+dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikibot']
 
 setup(name='MassUploadLibrary',
-    version      = '0.5',
-    description  = 'Managing a mass-upload to Wikimedia Commons.',
-    author       = 'Jean-Frederic',
-    author_email = 'JeanFred@github',
-    license      = 'MIT',
-    packages     = ['uploadlibrary'],
-    install_requires = ['Pywikibot'],
-    dependency_links = ['http://tools.wmflabs.org/pywikibot/core.tar.gz#egg=Pywikibot'],
-    )
+      version=version,
+      description='Managing a mass-upload to Wikimedia Commons.',
+      long_description=open('README.md').read(),
+      author='Jean-Frederic',
+      author_email='JeanFred@github',
+      license='MIT',
+      packages=packages,
+      install_requires=requires,
+      dependency_links=dependency_links)
