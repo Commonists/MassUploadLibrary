@@ -70,19 +70,19 @@ class MetadataRecord(Photo):
         return textlib.glue_template_and_params((template,
                                                  self.__dict__))
 
-    #def to_disk(self, directory):
-        #"""Write the Record on disk in a given repository.
+    def to_disk(self, title_format, directory):
+        """Write the Record on disk in a given repository.
 
-        #Serialise the record and name it as the file title,
-        #do nothing if anything goes wrong.
+        Serialise the record and name following the given format,
+        do nothing if anything goes wrong.
 
-        #"""
-        #fileName = join(directory, self.get_title() + '.dump')
-        #try:
-            #with open(fileName, 'w') as f:
-                #pickle.dump(self, f)
-        #except Exception, e:
-            #print "Could not pickle record %s \n %s" % (fileName, e)
+        """
+        file_name = join(directory, self.getTitle(title_format) + '.dump')
+        try:
+            with open(file_name, 'w') as f:
+                pickle.dump(self, f)
+        except Exception, e:
+            print "Could not pickle record %s \n %s" % (file_name, e)
 
 
 class MetadataCollection(object):
