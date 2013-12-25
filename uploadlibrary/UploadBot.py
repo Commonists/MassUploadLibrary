@@ -26,6 +26,7 @@ class DataIngestionBot(DataIngestionBot):
     def __init__(self, reader, front_titlefmt, rear_titlefmt,
                  variable_titlefmt, pagefmt,
                  subst=False,
+                 verifyDescription=True,
                  site=pywikibot.getSite(u'commons', u'commons')):
         self.reader = reader
         self.front_titlefmt = front_titlefmt
@@ -33,6 +34,7 @@ class DataIngestionBot(DataIngestionBot):
         self.variable_titlefmt = variable_titlefmt
         self.pagefmt = pagefmt
         self.subst = subst
+        self.verifyDescription = verifyDescription
         if subst:
             self.pagefmt = 'subst:%s' % self.pagefmt
         self.site = site
@@ -55,7 +57,7 @@ class DataIngestionBot(DataIngestionBot):
                           description=description,
                           useFilename=title,
                           keepFilename=True,
-                          verifyDescription=True,
+                          verifyDescription=self.verifyDescription,
                           uploadByUrl=False,
                           targetSite=self.site)
         bot._contents = photo.downloadPhoto().getvalue()
