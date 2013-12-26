@@ -141,9 +141,9 @@ A method allows to compute basic measures on this:
 Installation
 ------------
 
-Easiest way to install should be to use `pip`:
+Easiest way to install should be to use `pip` with `git`:
 
-    pip install git+git://github.com/JeanFred/MassUploadLibrary.git#egg=uploadlibrary
+    pip install git+git://github.com/Commmonists/MassUploadLibrary.git#egg=uploadlibrary
 
 But this usually fails when failing to solve the Pywikibot dependency.
 
@@ -154,6 +154,11 @@ Alternatively, you can clone the repository and install it using `setuptools`:
 
 Note that Pywikibot dependency is sometimes tricky to resolve automatically.
 If it fails, consider installing it manually.
+
+
+License
+-------
+MIT license
 
 [1]: https://commons.wikimedia.org/wiki/Commons:Batch_uploading/Fonds_Eug%C3%A8ne_Trutat_bis/Places
 [2]: https://commons.wikimedia.org/wiki/Commons:Batch_uploading/Fonds_Eug%C3%A8ne_Trutat_bis/Auteur
