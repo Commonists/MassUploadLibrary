@@ -232,15 +232,14 @@ class MetadataCollection(object):
             for item in items:
                 try:
                     values = (template,
-                            {'item': item[0], 'count': item[1],
-                            'value': "", 'categories': ""})
+                              {'item': item[0], 'count': item[1],
+                               'value': "", 'categories': ""})
                     table_line = ('\n' +
                                   textlib.glue_template_and_params(values))
                     wikipage.write(unicode(table_line))
                 except:
                     pass
             wikipage.write("\n|}")
-
 
     def write_metadata_to_csv(self, file_object):
         """Write the metadata collection as a CSV file."""
@@ -285,7 +284,7 @@ def categorisation_statistics(all_categories, categories_count_per_file):
     print "The less categorized file has {0:d} categories".format(min(categories_count_per_file.values()))
     print "We have {0:d} uncategorized files".format(len([x for x in categories_count_per_file
                                                           if categories_count_per_file[x] is 0]))
-    more_than_two =  len([x for x in categories_count_per_file if categories_count_per_file[x] >= 2])
+    more_than_two = len([x for x in categories_count_per_file if categories_count_per_file[x] >= 2])
     more_than_two_percentage = float(more_than_two) / len(categories_count_per_file) * 100
     print "We have {0:d} files with two categories or more, which makes {1:.1f}%".format(more_than_two,
                                                                                          more_than_two_percentage)
