@@ -8,7 +8,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = 0.5
+version = 0.6
 classifiers = [
     'Development Status :: 4 - Beta',
     'Environment :: Console',
