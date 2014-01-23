@@ -79,7 +79,7 @@ class MetadataRecord(Photo):
         for field, value in params.items():
             field = re.sub(' ', '_', field)
             field = re.sub(':', '-', field)
-            if isinstance(value, set):
+            if isinstance(value, set) or isinstance(value, list):
                 for index, item in enumerate(value, start=1):
                     name = field + '_' + str(index)
                     field_element = etree.SubElement(record_element, name)
