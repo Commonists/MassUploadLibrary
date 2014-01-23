@@ -78,6 +78,7 @@ class MetadataRecord(Photo):
         params = self.metadata
         for field, value in params.items():
             field = re.sub(' ', '_', field)
+            field = re.sub(':', '-', field)
             field_element = etree.SubElement(record_element, unicode(field))
             if isinstance(value, set):
                 name = field + '_element'
