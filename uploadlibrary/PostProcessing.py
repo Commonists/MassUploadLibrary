@@ -10,6 +10,26 @@ import codecs
 import pywikibot.textlib as textlib
 
 
+def split_and_keep_as_list(separator=" ; "):
+    """Split and make a list
+
+    Return a dictionary of one item
+    (key is field, element is the splitted values)
+
+    """
+    return split_and_keep_as_list_i, {'separator': separator}
+
+
+def split_and_keep_as_list_i(field, old_field_value, separator=" ; "):
+    """Split and make a list
+
+    Return a dictionary of one item
+    (key is field, element is the splitted values)
+
+    """
+    return {field: [x.strip() for x in old_field_value.split(separator)]}
+
+
 def join_all(field, old_field_value, separator=" ; "):
     """Join the values together.
 
