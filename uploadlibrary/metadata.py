@@ -79,13 +79,13 @@ class MetadataRecord(Photo):
         for field, value in params.items():
             field = re.sub(' ', '_', field)
             field = re.sub(':', '-', field)
-            field_element = etree.SubElement(record_element, unicode(field))
             if isinstance(value, set):
-                name = field + '_element'
-                for item in value:
-                    sub_element = etree.SubElement(field_element, name)
-                    sub_element.text = item
+                for index, item in enumerate(value, start=1):
+                    name = field + '_' + str(index)
+                    field_element = etree.SubElement(record_element, name)
+                    field_element.text = item
             else:
+                field_element = etree.SubElement(record_element, unicode(field))
                 field_element.text = unicode(value)
         return record_element
 
