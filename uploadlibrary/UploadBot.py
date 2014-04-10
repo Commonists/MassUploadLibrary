@@ -139,6 +139,9 @@ def cleanUpTitle(title):
     title = re.sub(u"[/+\\\\:]", u"-", title)
     title = re.sub(u"--+", u"-", title)
     title = re.sub(u",,+", u",", title)
+    title = re.sub(u" ,+", u",", title)
     title = re.sub(u"[-,^]([.]|$)", u"\\1", title)
+    title = title.replace(u" (", u"(")
+    title = title.replace(u"  ", u" ")
     title = title.replace(u" ", u"_")
     return title
