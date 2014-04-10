@@ -79,14 +79,27 @@ class MetadataRecord(Photo):
         for field, value in params.items():
             field = re.sub(' ', '_', field)
             field = re.sub(':', '-', field)
+            field = re.sub('/', '-', field)
             if isinstance(value, set) or isinstance(value, list):
                 for index, item in enumerate(value, start=1):
                     name = field + '_' + str(index)
                     field_element = etree.SubElement(record_element, name)
-                    field_element.text = item
+
+                    try:
+                        field_element.text = item
+                    except ValueError:
+                        field_element.text = item.encode('utf-8')
             else:
                 field_element = etree.SubElement(record_element, unicode(field))
-                field_element.text = unicode(value)
+                try:
+                    field_element.text = value
+                except TypeError:
+                    field_element.text = str(value)
+                except ValueError:
+                    #field_element.text = value.encode('utf-8')
+                    #field_element.text = unicode(value)
+                    field_element.text = "REDACTED"
+                    pass
         return record_element
 
     def to_disk(self, title_format, directory):
