@@ -108,7 +108,7 @@ def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
 
     """
     fixed_front = fixed_front_fmt % entries
-    extension = entries.get('_ext', 'none')
+    extension = entries.get('_ext', 'none').lower()
     if extension is None:
         extension = 'none'
     fixed_rear = fixed_rear_fmt % entries + '.' + extension
