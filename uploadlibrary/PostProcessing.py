@@ -9,6 +9,9 @@ import os
 import codecs
 import pywikibot.textlib as textlib
 
+def remove_linebreaks(field, old_field_value):
+    new_value = old_field_value.replace('\n', ' ').replace('\r', '').replace('  ', ' ')
+    return {field: new_value}
 
 def split_and_keep_as_list(separator=" ; "):
     """Split and make a list
