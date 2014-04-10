@@ -80,11 +80,14 @@ def process_DIMS(field, old_field_value):
     DIMS = old_field_value
     pattern = '(\w+?)[\.:]\s?([\d,]*)\s?(\w*)\s?;?\s?'
     splitted = filter(lambda a: a != u'', re.split(pattern, DIMS))
-    DIMS_BIS = dict(zip(["_".join([field, x]) for x in splitted[0::3]],
-                        [float(x.replace(',', '.')) for x in splitted[1::3]]))
-    if len(splitted[2::3]) > 0:
-        DIMS_BIS["_".join([field, 'unit'])] = splitted[2::3][0]
-    return DIMS_BIS
+    try:
+        DIMS_BIS = dict(zip(["_".join([field, x]) for x in splitted[0::3]],
+                            [float(x.replace(',', '.')) for x in splitted[1::3]]))
+        if len(splitted[2::3]) > 0:
+            DIMS_BIS["_".join([field, 'unit'])] = splitted[2::3][0]
+        return DIMS_BIS
+    except ValueError:
+        return {field: old_field_value}
 
 
 def make_categories(categories):
