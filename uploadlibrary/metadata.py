@@ -9,6 +9,7 @@ import codecs
 import csv
 import os
 import re
+from xml.dom import minidom
 from os.path import join
 from collections import Counter
 from lxml import etree
@@ -150,6 +151,14 @@ class MetadataCollection(object):
             self.records.append(metadata_record)
             self.fields.update(metadata_record.get_field_names())
 
+    def retrieve_metadata_from_xml(self, xml_file, element_root):
+        """Retrieve metadata from the given XML file."""
+        xmldoc = minidom.parse(xml_file)
+        for item in xmldoc.getElementsByTagName(element_root):
+            metadata_record = self.handle_record(item)
+            self.records.append(metadata_record)
+            self.fields.update(metadata_record.get_field_names())
+
     def handle_record(self, items):
         """Handle a record.
 
@@ -158,6 +167,26 @@ class MetadataCollection(object):
 
         """
         return MetadataRecord(None, items)
+
+    def get_metadata_from_xml_element(self, xml_elements):
+        """Return a metadata dictionary by parsing the given XML element children"""
+        elements = [child for child in xml_elements.childNodes
+                    if isinstance(child, minidom.Element)]
+        image_metadata = {}
+        for element in elements:
+            key = element.nodeName
+            try:
+                value = element.childNodes.item(0).data.strip()
+            except AttributeError:
+                value = ''
+            try:
+                image_metadata[key] = value.decode('utf-8').strip()
+            except:
+                try:
+                    image_metadata[key] = value.decode('latin-1').strip()
+                except:
+                    image_metadata[key] = value
+        return image_metadata
 
     def post_process_collection(self, method_mapping):
         """Call on each record its post_process method."""
