@@ -125,8 +125,9 @@ def cleanUpTitle(title):
     Otherwise the title of the page might not be allowed by the software.
 
     """
-
     title = title.strip()
+    title = re.sub(u"^- ", u"", title)
+    title = re.sub(u"^ - ", u"", title)
     title = re.sub(u"[<{\\[]", u"(", title)
     title = re.sub(u"[>}\\]]", u")", title)
     title = re.sub(u"[ _]?\\(!\\)", u"", title)
@@ -146,4 +147,5 @@ def cleanUpTitle(title):
     title = title.replace(u" (", u"(")
     title = title.replace(u"  ", u" ")
     title = title.replace(u" ", u"_")
+    title = re.sub(u"-_-", u"-", title)
     return title
