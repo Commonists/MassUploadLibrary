@@ -88,7 +88,7 @@ class DataIngestionBot(DataIngestionBot):
             self._debug_description(photo)
 
 
-def _cut_title(fixed_front, variable, fixed_rear, MAX_LENGTH=255):
+def _cut_title(fixed_front, variable, fixed_rear, MAX_LENGTH=240):
     """Return the given title smartly cut"""
     fixed_length = len(fixed_front) + len(fixed_rear)
     available_length = MAX_LENGTH - fixed_length
@@ -97,7 +97,9 @@ def _cut_title(fixed_front, variable, fixed_rear, MAX_LENGTH=255):
     while len(variable) > available_length:
         variable = " ".join(chunked[:-part]) + "..."
         part += 1
-    return fixed_front + variable + fixed_rear
+    title = fixed_front + variable + fixed_rear
+    assert len(title) <= MAX_LENGTH
+    return title
 
 
 def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
@@ -114,7 +116,7 @@ def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
     fixed_rear = fixed_rear_fmt % entries + '.' + extension
     variable = variable_fmt % entries
     return cleanUpTitle(_cut_title(fixed_front, variable, fixed_rear,
-                                   MAX_LENGTH=255))
+                                   MAX_LENGTH=240))
 
 
 def cleanUpTitle(title):
