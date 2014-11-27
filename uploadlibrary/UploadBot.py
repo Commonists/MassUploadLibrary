@@ -102,7 +102,7 @@ def _cut_title(fixed_front, variable, fixed_rear, MAX_LENGTH=240):
     return title
 
 
-def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
+def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt, add_extension=True):
     """Return a title based on the metadata and format strings.
 
     This method uses three format strings: the fixed front, the variable,
@@ -113,7 +113,10 @@ def make_title(entries, fixed_front_fmt, fixed_rear_fmt, variable_fmt):
     extension = entries.get('_ext', 'none').lower()
     if extension is None:
         extension = 'none'
-    fixed_rear = fixed_rear_fmt % entries + '.' + extension
+    if add_extension:
+        fixed_rear = fixed_rear_fmt % entries + '.' + extension
+    else:
+        fixed_rear = fixed_rear_fmt % entries
     variable = variable_fmt % entries
     return cleanUpTitle(_cut_title(fixed_front, variable, fixed_rear,
                                    MAX_LENGTH=240))
