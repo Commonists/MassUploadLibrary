@@ -18,6 +18,8 @@ import pywikibot.textlib as textlib
 from scripts.data_ingestion import Photo
 from uploadlibrary.PostProcessing import make_categories
 
+class UnreadableRecordException(Exception):
+    pass
 
 class MetadataRecord(Photo):
 
@@ -147,17 +149,25 @@ class MetadataCollection(object):
         assert os.path.exists(files_path)
         files = os.listdir(files_path)
         for image in files:
-            metadata_record = self.handle_record(join(files_path, image))
-            self.records.append(metadata_record)
-            self.fields.update(metadata_record.get_field_names())
+            try:
+                metadata_record = self.handle_record(join(files_path, image))
+                self.records.append(metadata_record)
+                self.fields.update(metadata_record.get_field_names())
+            except UnreadableRecordException as e:
+                print "Skip record, could not read"
+                continue
 
     def retrieve_metadata_from_xml(self, xml_file, element_root):
         """Retrieve metadata from the given XML file."""
         xmldoc = minidom.parse(xml_file)
         for item in xmldoc.getElementsByTagName(element_root):
-            metadata_record = self.handle_record(item)
-            self.records.append(metadata_record)
-            self.fields.update(metadata_record.get_field_names())
+            try:
+                metadata_record = self.handle_record(item)
+                self.records.append(metadata_record)
+                self.fields.update(metadata_record.get_field_names())
+            except UnreadableRecordException as e:
+                #print "Skip record, could not read"
+                continue
 
     def handle_record(self, items):
         """Handle a record.
