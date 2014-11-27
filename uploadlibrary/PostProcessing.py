@@ -147,6 +147,11 @@ def process_with_alignment_on_list(field, old_field_value, mapper=None):
     new_value['categories'] = all_categories
     return new_value
 
+def parse_categories(some_string):
+    """Returns the categories contained in a string."""
+    pattern = u'\[\[:?Category:(.+?)\]]'
+    splitted = filter(lambda a: a != u'', re.split(pattern, some_string))
+    return splitted
 
 def _retrieve_from_wiki(filename, alignment_template):
     """Retrieve a metadata mapping from a given wikipage on disk.
@@ -163,7 +168,8 @@ def _retrieve_from_wiki(filename, alignment_template):
             field_mapper = dict()
             for x in all_templates:
                 if x[0] == alignment_template:
-                    categories = x[1]['categories'].split(']]')[0].split(':')[-1]
+                    raw_categories = x[1]['categories']
+                    categories = parse_categories(raw_categories)
                     field = x[1]['item'].strip()
                     field_mapper[field] = (x[1]['value'], categories)
             return field_mapper
