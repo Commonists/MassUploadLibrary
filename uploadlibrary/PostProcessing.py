@@ -164,7 +164,8 @@ def _retrieve_from_wiki(filename, alignment_template):
             for x in all_templates:
                 if x[0] == alignment_template:
                     categories = x[1]['categories'].split(']]')[0].split(':')[-1]
-                    field_mapper[x[1]['item']] = (x[1]['value'], categories)
+                    field = x[1]['item'].strip()
+                    field_mapper[field] = (x[1]['value'], categories)
             return field_mapper
     except Exception, e:
         print e
