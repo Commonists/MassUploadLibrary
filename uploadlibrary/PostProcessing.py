@@ -150,7 +150,9 @@ def process_with_alignment_on_list(field, old_field_value, mapper=None):
 def parse_categories(some_string):
     """Returns the categories contained in a string."""
     pattern = u'\[\[:?Category:(.+?)\]]'
-    splitted = filter(lambda a: a != u'', re.split(pattern, some_string))
+    black_list = [u'', u'\n']
+    splitted = filter(lambda a: a not in black_list,
+                      re.split(pattern, some_string))
     return splitted
 
 def _retrieve_from_wiki(filename, alignment_template):
@@ -168,10 +170,11 @@ def _retrieve_from_wiki(filename, alignment_template):
             field_mapper = dict()
             for x in all_templates:
                 if x[0] == alignment_template:
+                    field = x[1]['item'].strip()
                     raw_categories = x[1]['categories']
                     categories = parse_categories(raw_categories)
-                    field = x[1]['item'].strip()
-                    field_mapper[field] = (x[1]['value'], categories)
+                    raw_value = x[1]['value'].strip()
+                    field_mapper[field] = (raw_value, categories)
             return field_mapper
     except Exception, e:
         print e
