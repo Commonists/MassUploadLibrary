@@ -61,13 +61,16 @@ def map_and_apply_technique(separator=","):
     support_mapper = {
         'papier': 'paper',
         'parchemin': 'parchment',
+        'registre de Parchemin': 'parchment',
         'cire': 'wax',
         'cuir': 'leather',
         'plâtre': 'plaster',
         'bois': 'wood',
         'érable': 'maple',
         'velin': 'Vellum',
-        'tissu': 'fabric'
+        'tissu': 'fabric',
+        'plomb': 'lead',
+        'gravure': 'engraving'
         }
     return (split_and_apply_template_on_each, {'template': 'Technique',
                                                'mapper': support_mapper,
