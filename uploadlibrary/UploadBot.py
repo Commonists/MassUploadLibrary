@@ -150,5 +150,8 @@ def cleanUpTitle(title):
     title = re.sub(u"[-,^]([.]|$)", u"\\1", title)
     title = title.replace(u"  ", u" ")
     title = title.replace(u" ", u"_")
+    # title = title.replace(u"’", u"'")
+    title = title.replace(u"« ", u"\"")
+    title = title.replace(u" »", u"\"")
     title = re.sub(u"-_-", u"-", title)
     return title
