@@ -27,26 +27,27 @@ class DataIngestionBot(DataIngestionBot):
                  variable_titlefmt, pagefmt,
                  subst=False,
                  verifyDescription=True,
+                 uploadByUrl=False,
                  site=pywikibot.getSite(u'commons', u'commons')):
-        self.reader = reader
+        super(self.__class__, self).__init__(reader, None, pagefmt, site)
         self.front_titlefmt = front_titlefmt
         self.rear_titlefmt = rear_titlefmt
         self.variable_titlefmt = variable_titlefmt
-        self.pagefmt = pagefmt
         self.subst = subst
         self.verifyDescription = verifyDescription
         if subst:
             self.pagefmt = 'subst:%s' % self.pagefmt
         self.site = site
-        #super(self.__class__, self).__init__()
 
-    def _doUpload(self, photo):
-        duplicates = photo.findDuplicateImages(self.site)
+    def treat(self, photo):
+        duplicates = photo.findDuplicateImages()
         if duplicates:
-            pywikibot.output(u"Skipping duplicate of %r" % (duplicates, ))
+            pywikibot.output(u"Skipping duplicate of %r" % duplicates)
             return duplicates[0]
+
         if self.subst:
             photo.metadata['subst'] = 'subst:'
+
         title = make_title(photo.metadata, self.front_titlefmt,
                            self.rear_titlefmt, self.variable_titlefmt)
 

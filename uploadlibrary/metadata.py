@@ -15,13 +15,13 @@ from collections import Counter
 from lxml import etree
 from uploadlibrary import UnicodeCSV
 import pywikibot.textlib as textlib
-from scripts.data_ingestion import Photo
 from uploadlibrary.PostProcessing import make_categories
+from uploadlibrary.media_object import MediaObject
 
 class UnreadableRecordException(Exception):
     pass
 
-class MetadataRecord(Photo):
+class MetadataRecord(MediaObject):
 
     """Represent a Record, with its associated metadata."""
 
