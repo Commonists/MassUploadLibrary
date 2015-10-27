@@ -219,7 +219,7 @@ def _pattern_to_size(m):
 def parse_format_unwrapped(text):
     format_pattern = re.compile(r"""
         (?P<a>[\d,\.]+?)   # Digits, comma or dot, captured as group
-        \s*[x×]\s*         # Whitespace, x, whitespace
+        \s*[Xx×]\s*        # Whitespace, x, whitespace
         (?P<b>[\d,\.]+?)   # Same
         \s*cm?             # Whitespace until the end
         """, re.X)
